@@ -1,0 +1,24 @@
+# fasta内のidを変更する定義
+# id_converter(入力fastaファイル名, 追加する文字)
+def id_converter(filename, keyword): 
+    def open_fasta(filename): 
+        file = open(filename)
+        seq = file.read()
+        file.close()
+        return seq
+    
+    def p_num_conv(sequence, key): 
+        CVT_sequence = sequence
+        regex = re.compile(r'AKK\d{5}.1') # 変更する必要あり
+        for product_number in regex.findall(sequence): 
+            CVT_sequence = CVT_sequence.replace(product_number, str(key + product_number))
+        return CVT_sequence
+    
+    def save_fasta(var, filename): 
+        file = open(str(filename + '.fasta'), 'w')
+        file.write(var)
+        file.close()
+
+    SEQUENCE = open_fasta(filename)
+    CONVERTED_SEQ = p_num_conv(SEQUENCE, keyword)
+    save_fasta(CONVERTED_SEQ, str('converted_' + filename))
